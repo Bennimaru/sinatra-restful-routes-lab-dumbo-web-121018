@@ -2,6 +2,9 @@ class ApplicationController < Sinatra::Base
   configure do
     set :public_folder, 'public'
     set :views, 'app/views'
+
+    set :method_override, true
+
   end
 
   # code actions here!
@@ -10,14 +13,13 @@ class ApplicationController < Sinatra::Base
   end
 
   post "/recipe" do
-    recipe= Recipe.new(params)
+    recipe = Recipe.new(params)
     recipe.save
-    erb :create
     redirect "/recipe/#{recipe.id}"
   end
 
   get "/recipe/:id" do
-    @recipe=Recipe.find(params[:id])
+    @recipe =Recipe.find(params[:id])
     erb :show
   end
 
@@ -29,7 +31,7 @@ class ApplicationController < Sinatra::Base
   patch "/recipe/:id" do
     @recipe=Recipe.find(params[:id])
     @recipe.update(name:params[:name],ingredients:params[:ingredients],cook_time:params[:cook_time])
-    redirect "/recipe/#{recipe.id}"
+    redirect "/recipe/#{@recipe.id}"
   end
 
   get "/recipe" do
@@ -44,13 +46,10 @@ class ApplicationController < Sinatra::Base
 
   delete "/recipe/:id" do
     @recipe=Recipe.find(params[:id])
-    @recipe.delete
+    @recipe.destroy
     redirect "/recipe"
 
   end
-
-
-
 
 
 end
